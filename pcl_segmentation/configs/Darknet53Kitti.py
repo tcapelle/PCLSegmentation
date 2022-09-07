@@ -85,7 +85,7 @@ def Darknet53Kitti():
     mc.CLS_COLOR_MAP[key] = np.array(value, np.float32) / 255.0
 
   # Input Shape
-  mc.BATCH_SIZE         = 16
+  mc.BATCH_SIZE         = 4
   mc.AZIMUTH_LEVEL      = 1024
   mc.ZENITH_LEVEL       = 64
   mc.NUM_FEATURES       = 6

@@ -4,3 +4,4 @@ easydict
 pillow
 opencv-python
 matplotlib
+wandb
