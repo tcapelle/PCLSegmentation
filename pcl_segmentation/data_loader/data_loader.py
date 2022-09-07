@@ -43,7 +43,7 @@ class DataLoader:
     self.mc = mc
 
     validation = True if dataset_split == "val" else False
-    self._batch_size = mc.BATCH_SIZE if not validation else 1
+    self._batch_size = mc.BATCH_SIZE
     self._data_augmentation = mc.DATA_AUGMENTATION if not validation else False
 
     self._dataset_split = dataset_split
