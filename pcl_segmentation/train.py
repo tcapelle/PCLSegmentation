@@ -29,11 +29,11 @@ import wandb
 
 from data_loader import DataLoader
 from utils.callbacks import TensorBoard
+from utils.wandb import LogSamplesCallback
 from utils.util import *
 from utils.args_loader import load_model_config
 
 from tensorflow.keras import mixed_precision
-from wandb.keras import WandbCallback
 
 def train(arg):
     
@@ -44,7 +44,7 @@ def train(arg):
 
     # tensorboard_callback = TensorBoard(arg.train_dir, val, profile_batch=(200, 202))
     # checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(os.path.join(arg.train_dir, "checkpoint"))
-    wandb_callback = WandbCallback(save_model=False)
+    wandb_callback = LogSamplesCallback(dataset=val, log_epoch_preds=True, save_model=False)
 
     lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
         initial_learning_rate=config.LEARNING_RATE,
@@ -66,8 +66,15 @@ def train(arg):
     
     (lidar_input, lidar_mask), label, weight  = train.take(1).get_single_element()
     out = model([lidar_input, lidar_mask])
-
-    model.save(filepath=os.path.join(arg.train_dir, arg.model), save_traces=True)
+    
+    #log model checkpoint
+    model_path = os.path.join(arg.train_dir, arg.model)
+    model.save(filepath=model_path, save_traces=True)
+    model_cpt = wandb.Artifact(name=arg.model, type="model")
+    model_cpt.add_dir(model_path)
+    wandb.log_artifact(model_cpt)
+    
+    #end run
     wandb.finish()
 
 if __name__ == '__main__':
