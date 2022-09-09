@@ -52,7 +52,7 @@ def log_model_predictions(lidar_input, prediction, label, class_color_map, step=
     wandb.log({"Images/3D_preds": points_rgb},step=step)
     
     
-def create_pred_table(lidar_inputs,labels, predictions, class_color_map):
+def create_pred_table(lidar_inputs, labels, predictions, class_color_map):
     table_data = []
     for i, (lidar_input, label, prediction) in enumerate(zip(lidar_inputs,labels, predictions)):
         input_row = _create_row(lidar_input, label, class_color_map)

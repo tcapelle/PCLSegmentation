@@ -39,12 +39,14 @@ def train(arg):
     
     config, model = load_model_config(args.model, args.config)
     wandb.init(project="small_kitti", entity="av-team", job_type="training", config=config)
+    #to make lineaged
+    wandb.use_artifact("KITTI_nano_tfrecord:v0")
     train = DataLoader("train", arg.data_path, config).write_tfrecord_dataset().read_tfrecord_dataset()
     val = DataLoader("val", arg.data_path, config).write_tfrecord_dataset().read_tfrecord_dataset()
 
     # tensorboard_callback = TensorBoard(arg.train_dir, val, profile_batch=(200, 202))
     # checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(os.path.join(arg.train_dir, "checkpoint"))
-    wandb_callback = LogSamplesCallback(dataset=val, log_epoch_preds=True, save_model=False)
+    wandb_callback = LogSamplesCallback(dataset=val, log_epoch_preds=False, save_model=False)
 
     lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
         initial_learning_rate=config.LEARNING_RATE,
